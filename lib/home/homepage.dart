@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../StationListPage/StationListPage.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -8,6 +9,68 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  String departureStation = '선택';
+  String arrivalStation = '선택';
+
+void _selectStation(bool isDeparture) async {
+  final selectedStation = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => StationListPage(
+        selectedDeparture: departureStation,
+        selectedArrival: arrivalStation,
+        isDeparture: isDeparture, // 여기에 값 전달!
+      ),
+    ),
+  );
+
+  if (selectedStation != null && selectedStation is String) {
+    setState(() {
+      if (isDeparture) {
+        departureStation = selectedStation;
+      } else {
+        arrivalStation = selectedStation;
+      }
+    });
+  }
+}
+
+void ReservationTrain() {
+  if (departureStation == null || arrivalStation == null) {
+    // 출발역 또는 도착역이 선택되지 않았을 경우
+    _showDialog("오류", "출발역과 도착역을 선택해주세요.");
+    return;
+  }
+
+  if (departureStation == arrivalStation) {
+    // 출발역과 도착역이 같으면 다이얼로그 표시
+    _showDialog("경고", "출발역과 도착역이 동일할 수 없습니다.");
+    return;
+  }
+
+  // 예약 진행 로직 추가
+  _showDialog("성공", "기차 예약이 완료되었습니다!");
+}
+
+void _showDialog(String title, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("확인"),
+          ),
+        ],
+      );
+    },
+  );
+}
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,9 +110,9 @@ class _HomepageState extends State<Homepage> {
                           ),
                           SizedBox(height: 4),
                           TextButton(
-                            onPressed: (){}, 
-                            child: const Text(
-                               '선택',
+                             onPressed: () => _selectStation(true),
+                            child:  Text(
+                               departureStation,
                                style: TextStyle(
                                 color:  Colors.black,
                                 fontSize: 40,
@@ -77,9 +140,9 @@ class _HomepageState extends State<Homepage> {
                           ),
                           SizedBox(height: 4),
                           TextButton(
-                            onPressed: (){}, 
-                            child: const Text(
-                               '선택',
+                            onPressed: () => _selectStation(false),
+                            child:  Text(
+                               arrivalStation,
                                style: TextStyle(
                                 color:  Colors.black,
                                 fontSize: 40,
@@ -97,7 +160,7 @@ class _HomepageState extends State<Homepage> {
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: (){},
+                    onPressed: () => ReservationTrain(),
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
                       backgroundColor:Colors.purple,                    
