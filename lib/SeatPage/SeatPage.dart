@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class SeatSelectionPage extends StatefulWidget {
   final String? selectedDeparture;
   final String? selectedArrival;
@@ -27,7 +28,13 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
 
   void toggleSeat(int row, int col) {
     setState(() {
-      seatSelection[row][col] = !seatSelection[row][col];
+      // 기존에 선택된 좌석을 모두 해제하고, 새로운 좌석만 선택하도록 함
+      for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+          seatSelection[i][j] = false;
+        }
+      }
+      seatSelection[row][col] = true;  // 새로운 좌석만 선택됨
     });
   }
 
@@ -55,7 +62,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
               ],
             ),
             const SizedBox(height: 10),
-            
+             
             // 좌석 상태 설명
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -72,10 +79,10 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4, // 4개의 좌석 열
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 22,
+                  crossAxisSpacing: 22,
                 ),
-                itemCount: rows * columns,z
+                itemCount: rows * columns,
                 itemBuilder: (context, index) {
                   int row = index ~/ columns;
                   int col = index % columns;
