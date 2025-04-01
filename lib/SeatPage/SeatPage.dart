@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_train_app/ComplatePage/ReservationPage.dart';
 
 class SeatSelectionPage extends StatefulWidget {
   final String? selectedDeparture;
@@ -15,7 +17,7 @@ class SeatSelectionPage extends StatefulWidget {
 }
 
 class _SeatSelectionPageState extends State<SeatSelectionPage> {
-  final int rows = 10; // 10행으로 변경하여 좌측 20개, 우측 20개 생성
+  final int rows = 20; // 10행으로 변경하여 좌측 40개, 우측 40개 생성
   final int seatsPerSide = 2; // 한쪽에 2개의 좌석
   List<List<bool>> seatSelection = [];
 
@@ -148,110 +150,145 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
             const SizedBox(height: 10), // 레이블과 좌석 사이 간격
 
             // 좌석 배치
-            Expanded(
-              child: ListView.builder(
-                itemCount: rows,
-                itemBuilder: (context, row) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 11.0), // 행 간격
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // 왼쪽 좌석 2개
-                        Row(
-                          children: List.generate(seatsPerSide, (col) {
-                            int seatIndex = col;
-                            bool isSelected = seatSelection[row][seatIndex];
-                            int seatNumber = row * 4 + col + 1; // 좌석 번호 계산 (화면에는 표시하지 않음)
+            Flexible(
+              child: SizedBox(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: List.generate(rows, (row) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 11.0), // 행 간격
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // 왼쪽 좌석 2개
+                            Row(
+                              children: List.generate(seatsPerSide, (col) {
+                                int seatIndex = col;
+                                bool isSelected = seatSelection[row][seatIndex];
 
-                            return GestureDetector(
-                              onTap: () => toggleSeat(row, seatIndex),
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                margin: const EdgeInsets.only(right: 22),
-                                decoration: BoxDecoration(
-                                  color: isSelected ? Colors.purple : Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                // 좌석 번호는 표시하지 않음
-                              ),
-                            );
-                          }),
-                        ),
-                        // 통로 (간격) - 행 번호 표시
-                        Container(
-                          width: 44,
-                          height: 60,
-                          alignment: Alignment.center,
-                          child: Text(
-                            '${row + 1}', // 행 번호 표시
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                                return GestureDetector(
+                                  onTap: () => toggleSeat(row, seatIndex),
+                                  child: Container(
+                                    width: 60,
+                                    height: 60,
+                                    margin: const EdgeInsets.only(right: 22),
+                                    decoration: BoxDecoration(
+                                      color: isSelected ? Colors.purple : Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                );
+                              }),
                             ),
-                          ),
-                        ),
-                        // 오른쪽 좌석 2개
-                        Row(
-                          children: List.generate(seatsPerSide, (col) {
-                            int seatIndex = col + seatsPerSide; // 오른쪽 좌석은 2, 3번 인덱스
-                            bool isSelected = seatSelection[row][seatIndex];
-                            int seatNumber = row * 4 + col + seatsPerSide + 1; // 좌석 번호 계산 (화면에는 표시하지 않음)
-
-                            return GestureDetector(
-                              onTap: () => toggleSeat(row, seatIndex),
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                margin: const EdgeInsets.only(left: 22),
-                                decoration: BoxDecoration(
-                                  color: isSelected ? Colors.purple : Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(8),
+                            // 통로 (간격) - 행 번호 표시
+                            Container(
+                              width: 44,
+                              height: 60,
+                              alignment: Alignment.center,
+                              child: Text(
+                                '${row + 1}', // 행 번호 표시
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                // 좌석 번호는 표시하지 않음
+                              ),
+                            ),
+                            // 오른쪽 좌석 2개
+                            Row(
+                              children: List.generate(seatsPerSide, (col) {
+                                int seatIndex = col + seatsPerSide;
+                                bool isSelected = seatSelection[row][seatIndex];
+
+                                return GestureDetector(
+                                  onTap: () => toggleSeat(row, seatIndex),
+                                  child: Container(
+                                    width: 60,
+                                    height: 60,
+                                    margin: const EdgeInsets.only(left: 22),
+                                    decoration: BoxDecoration(
+                                      color: isSelected ? Colors.purple : Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+            ),
+
+
+            // 예매하기 버튼
+            SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  // 선택된 좌석 확인
+                  List<String> selectedSeats = [];
+                  for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < 4; j++) {
+                      if (seatSelection[i][j]) {
+                        // 열에 따라 A, B, C, D로 변환
+                        String seatColumn = String.fromCharCode(65 + j); // A, B, C, D
+                        int seatRow = i + 1;
+                        selectedSeats.add("$seatColumn$seatRow");
+                      }
+                    }
+                  }
+                  showCupertinoDialog(
+                    context: context,
+                    builder: (context) => CupertinoAlertDialog(
+                      title: const Text("예매 하시겠습니까?"),
+                          content: Text(
+                            selectedSeats.isEmpty 
+                              ? "좌석을 선택하세요" 
+                              : selectedSeats.map((seat) => "좌석: $seat").join("\n"), // "좌석: A1" 형식으로 출력
+                          ),
+                      actions: [
+                        CupertinoDialogAction(
+                          onPressed: () => Navigator.pop(context), // 취소 버튼
+                          child: const Text("취소"),
+                          isDestructiveAction: true, // 빨간색 강조 (iOS 스타일)
+                        ),
+                        CupertinoDialogAction(
+                          onPressed: () {
+                            Navigator.pop(context); // 다이얼로그 닫기
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReservationPage(
+                                  departure: widget.selectedDeparture ?? "미정",
+                                  arrival: widget.selectedArrival ?? "미정",
+                                  departureTime: "10:30 AM", // 임시 데이터
+                                  arrivalTime: "12:45 PM",  // 임시 데이터
+                                  duration: "2시간 15분",     // 임시 데이터
+                                  seatNumber: selectedSeats.join(", "), // 선택한 좌석
+                                ),
                               ),
                             );
-                          }),
+                          },
+                          child: const Text("확인"),
+                          isDefaultAction: true, 
                         ),
+
                       ],
                     ),
                   );
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  minimumSize: const Size(double.infinity, 50),
+                   shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                ),
+                child: const Text("예매 하기", style: TextStyle(color: Colors.white, fontSize: 18)),
               ),
-            ),
-
-            // 예매하기 버튼
-            ElevatedButton(
-              onPressed: () {
-                // 선택된 좌석 확인
-                List<String> selectedSeats = [];
-                for (int i = 0; i < rows; i++) {
-                  for (int j = 0; j < 4; j++) {
-                    if (seatSelection[i][j]) {
-                      // 열에 따라 A, B, C, D로 변환
-                      String seatColumn = String.fromCharCode(65 + j); // A, B, C, D
-                      int seatRow = i + 1;
-                      selectedSeats.add("$seatColumn$seatRow");
-                    }
-                  }
-                }
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text("선택된 좌석"),
-                    content: Text(selectedSeats.isEmpty ? "좌석을 선택하세요" : selectedSeats.join("\n")),
-                    actions: [
-                      TextButton(onPressed: () => Navigator.pop(context), child: const Text("확인")),
-                    ],
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              child: const Text("예매 하기", style: TextStyle(color: Colors.white, fontSize: 18)),
             ),
           ],
         ),
