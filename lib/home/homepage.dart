@@ -60,7 +60,6 @@ class _HomepageState extends State<Homepage> {
   }
 
 
-
   void ReservationTrain() {
     if (departureStation == "선택" || arrivalStation == "선택") {
       _showDialog("오류", "출발역과 도착역을 선택해주세요.");
