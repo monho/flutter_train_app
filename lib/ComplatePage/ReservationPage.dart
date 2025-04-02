@@ -24,7 +24,7 @@ class ReservationPage extends StatelessWidget {
     String reservationCode = "$departure-$arrival-$seatNumber"; // QR코드 데이터
 
     return Scaffold(
-      appBar: AppBar(title: const Text("예매 확인")),
+      appBar: AppBar(title: const Text("예매 확인") , centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(

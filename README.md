@@ -1,16 +1,52 @@
-# flutter_train_app
+📖 프로젝트 개요
+이 프로젝트는 Flutter 기초 학습을 위한 개인 과제로, 기차 예매 서비스 애플리케이션을 구현합니다.
 
-A new Flutter project.
+핵심 학습 목표는 레이아웃 나누기와 위젯 활용이며, 실무와 유사한 UI 명세서와 앱 화면 흐름을 기반으로 안정성과 사용성을 고려한 앱을 설계합니다.
 
-## Getting Started
+프로젝트명: flutter_train_app
+주요 화면: HomePage, StationListPage, SeatPage
+핵심 키워드: 레이아웃 나누기, 위젯과 친해지기, 안정성(예외처리), 사용성(UX)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+📱 앱 UI Flow
+1. HomePage (홈 페이지)
+출발역과 도착역을 선택할 수 있는 초기 화면입니다.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2. StationListPage (기차역 리스트 페이지)
+출발역 또는 도착역을 선택하기 위해 이동하는 화면입니다.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. SeatPage (좌석 선택 페이지)
+좌석을 선택하고 예매를 완료하는 화면입니다.
+
+4. ReservationPage (예약 확인 페이지)
+내 예약 정보를 확인하는 화면입니다.
+
+
+🛠 설정 및 요구사항
+기본 조건
+프로젝트명: flutter_train_app
+화면 이름:
+초기 화면: HomePage
+기차역 선택 화면: StationListPage
+좌석 선택 화면: SeatPage
+기차역 목록 (총 11개, 변형 금지):
+"수서", "동탄", "평택지제", "천안아산", "오송", "대전", "김천구미", "동대구", "경주", "울산", "부산"
+
+
+✨ 필수 기능
+1. HomePage
+출발역/도착역 선택: 클릭 시 StationListPage로 이동, 선택 후 문자열 업데이트.
+좌석 선택 버튼: 출발역과 도착역이 모두 선택된 경우에만 SeatPage로 이동.
+2. StationListPage
+앱바 타이틀: 출발역 선택 시 "출발역", 도착역 선택 시 "도착역" 표시.
+기차역 리스트: 고정된 11개 역 표시, 클릭 시 선택된 역 반환.
+3. SeatPage
+좌석 선택: 클릭 시 색상 변경(회색 → 보라색).
+예매 하기: 선택된 좌석이 있을 경우 다이얼로그 표시, "확인" 시 HomePage로 이동.
+
+
+✨ 도전 기능
+
+1. 이미 선택한 역 리스트에서 삭제.
+
+2. SeatPage에서 예약 확인 시 HomePage로 이동시키지 않고 예약 확인 페이지를 하나 만들어서 예약에대한 정보를 실제 코레일 처럼 제작
